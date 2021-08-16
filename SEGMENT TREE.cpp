@@ -219,13 +219,15 @@ int32_t main() {
   ios_base::sync_with_stdio(false);
   cin.tie(nullptr);
   cout.tie(nullptr);
-  /* fin.sync_with_stdio(false);
+  /* 
+  fin.sync_with_stdio(false);
   fout.sync_with_stdio(false);
   fin.tie(nullptr);
   fout.tie(nullptr);
   int n;
   cin >> n;
   SegTree tree(n);
-  tree.build(1, 1, n); */
+  tree.build(1, 1, n); 
+  */
   return 0;
 }
