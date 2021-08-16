@@ -4,15 +4,18 @@
 
 using namespace std;
 
-/* ifstream fin(".in");
-ofstream fout(".out"); */
+/* 
+ifstream fin(".in");
+ofstream fout(".out"); 
+*/
 
 /*
 - TIPURI DE DATE!!!
 
 - DE SCHIMBAT:
   * node -> operator
-  * update_node */
+  * update_node 
+*/
 
 /// const int INF = 1e16L;
 const int NO_OPERATION = INF;
