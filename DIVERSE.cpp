@@ -13,11 +13,15 @@ typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_upda
 const int di[] = {-1, 0, 1, 0},
           dj[] = {0, 1, 0, -1};
 
-/* const int di[] = {-1, 0, 1, 0, -1, -1, 1, 1},
-          dj[] = {0, 1, 0, -1, -1, 1, -1, 1}; */
+/* 
+const int di[] = {-1, 0, 1, 0, -1, -1, 1, 1},
+          dj[] = {0, 1, 0, -1, -1, 1, -1, 1}; 
+*/
 
-/* const int di[] = {2, 1, -1, -2, -2, -1, 1, 2},
-      dj[] = {1, 2, 2, 1,-1, -2, -2, -1}; - Cal(Horse) */
+/* 
+const int di[] = {2, 1, -1, -2, -2, -1, 1, 2},
+          dj[] = {1, 2, 2, 1,-1, -2, -2, -1}; - Cal(Horse) 
+*/
 
 int luna[] = {-1, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}; /// Month
 
