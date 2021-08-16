@@ -112,7 +112,7 @@ int solve(int64 n)  {
   return ans;
 }
 
-int32_t main() {
+int main() {
   ios_base::sync_with_stdio(false);
   cin.tie(nullptr);
   cout.tie(nullptr);
