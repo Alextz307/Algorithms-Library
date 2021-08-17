@@ -35,8 +35,6 @@ struct node {
   friend node operator + (const node &A, const node &B) {
     node ans;
     ans.val = A.val + B.val;
-    /// ans.val = min(A.val, B.val); - MIN
-    /// ans.val = max(A.val, B.val); - MAX
     ans.lazy_sum = 0;
     ans.lazy_set = NO_OPERATION;
     return ans;
@@ -74,13 +72,11 @@ struct SegTree {
   void update_node_set(int x, int lx, int rx, int val) {
     tree[x].lazy_sum = 0;
     tree[x].val = (rx - lx + 1) * val;
-    /// tree[x].val = val; - MIN / MAX
     tree[x].lazy_set = val;
   }
 
   void update_node_add(int x, int lx, int rx, int val) {
     tree[x].val += (rx - lx + 1) * val;
-    /// tree[x].val += val; - MIN / MAX
     tree[x].lazy_sum += val;
   }
 
