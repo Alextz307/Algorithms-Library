@@ -4,17 +4,16 @@
 
 using namespace std;
 
-/* 
+/*
 ifstream fin(".in");
-ofstream fout(".out"); 
+ofstream fout(".out");
 */
 
 /*
 - TIPURI DE DATE!!!
-
 - DE SCHIMBAT:
   * node -> operator
-  * update_node 
+  * update_node
 */
 
 /// const int INF = 1e16L;
@@ -163,48 +162,11 @@ struct SegTree {
     tree[x] = tree[lSon] + tree[rSon];
   }
 
-  int query_sum(int x, int lx, int rx, int st, int dr) {
-    if (st <= lx && rx <= dr)
-      return tree[x].val;
-    push_set(x, lx, rx);
-    push_add(x, lx, rx);
-    int mid = (lx + rx) >> 1, ans = 0;
-    if (st <= mid)
-      ans += query_sum(x << 1, lx, mid, st, dr);
-    if (mid < dr)
-      ans += query_sum(x << 1 | 1, mid + 1, rx, st, dr);
-    return ans;
-  }
-
-  int query_min(int x, int lx, int rx, int st, int dr) {
-    if (st <= lx && rx <= dr)
-      return tree[x].val;
-    push_set(x, lx, rx);
-    push_add(x, lx, rx);
-    int mid = (lx + rx) >> 1, ans = INF;
-    if (st <= mid)
-      min_self(ans, query_min(x << 1, lx, mid, st, dr));
-    if (mid < dr)
-      min_self(ans, query_min(x << 1 | 1, mid + 1, rx, st, dr));
-    return ans;
-  }
-
-  int query_max(int x, int lx, int rx, int st, int dr) {
-    if (st <= lx && rx <= dr)
-      return tree[x].val;
-    push_set(x, lx, rx);
-    push_add(x, lx, rx);
-    int mid = (lx + rx) >> 1, ans = -INF;
-    if (st <= mid)
-      max_self(ans, query_max(x << 1, lx, mid, st, dr));
-    if (mid < dr)
-      max_self(ans, query_max(x << 1 | 1, mid + 1, rx, st, dr));
-    return ans;
-  }
-
   node query(int x, int lx, int rx, int st, int dr) {
     if (st <= lx && rx <= dr)
       return tree[x];
+    push_set(x, lx, rx);
+    push_add(x, lx, rx);
     int mid = (lx + rx) >> 1;
     node ans1 = empty_node, ans2 = empty_node;
     if (st <= mid)
@@ -219,7 +181,7 @@ int32_t main() {
   ios_base::sync_with_stdio(false);
   cin.tie(nullptr);
   cout.tie(nullptr);
-  /* 
+  /*
   fin.sync_with_stdio(false);
   fout.sync_with_stdio(false);
   fin.tie(nullptr);
@@ -227,7 +189,7 @@ int32_t main() {
   int n;
   cin >> n;
   SegTree tree(n);
-  tree.build(1, 1, n); 
+  tree.build(1, 1, n);
   */
   return 0;
 }
