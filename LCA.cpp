@@ -1,6 +1,6 @@
 const int MAXN = 1 << 15;
 const int MAXM = 1 << 16;
-int m, tour[MAXM], depth[MAXM], first[MAXN], lg2[MAXM], rmq[17][MAXM], aib[MAXN];
+int m, tour[MAXM], depth[MAXM], first[MAXN], lg2[MAXM], rmq[17][MAXM];
 vector<int> G[MAXN];
 
 void dfs(int u, int level) {
