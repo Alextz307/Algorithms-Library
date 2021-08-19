@@ -5,7 +5,7 @@ using namespace std;
 ifstream fin("lca.in");
 ofstream fout("lca.out");
 
-const int MAXN = 2e5 + 5;
+const int MAXN = 2e5 + 5; /// 2 * N
 int N, Q, M, tour[MAXN], depth[MAXN], first[MAXN], lg2[MAXN], rmq[18][MAXN];
 vector<int> G[MAXN];
 
