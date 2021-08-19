@@ -9,9 +9,9 @@ void compute_rmq(int n) {
   pw2[0] = 1;
   for (int i = 1; i <= n; ++i) {
     if (i < 18)
-      pw2[i] = pw2[i - 1] * 2;
+      pw2[i] = pw2[i - 1] << 1;
     if (i > 1)
-      lg2[i] = lg2[i / 2] + 1;
+      lg2[i] = lg2[i >> 1] + 1;
   }
   for (int j = 1; pw2[j] <= n; ++j)
     for (int i = 1; i + pw2[j] - 1 <= n; ++i)
