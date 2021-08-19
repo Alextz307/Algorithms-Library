@@ -1,32 +1,26 @@
-#include <bits/stdc++.h>
-
-using namespace std;
-
-ifstream fin("lca.in");
-ofstream fout("lca.out");
-
-const int MAXN = 2e5 + 5; /// 2 * N
-int N, Q, M, tour[MAXN], depth[MAXN], first[MAXN], lg2[MAXN], rmq[18][MAXN];
+const int MAXN = 1 << 15;
+const int MAXM = 1 << 16;
+int m, tour[MAXM], depth[MAXM], first[MAXN], lg2[MAXM], rmq[17][MAXM], aib[MAXN];
 vector<int> G[MAXN];
 
 void dfs(int u, int level) {
-  tour[++M] = u;
-  depth[M] = level;
-  first[u] = M;
+  tour[++m] = u;
+  depth[m] = level;
+  first[u] = m;
   for (int v : G[u]) {
     dfs(v, level + 1);
-    tour[++M] = u;
-    depth[M] = level;
+    tour[++m] = u;
+    depth[m] = level;
   }
 }
 
 void compute_rmq() {
-  for (int i = 2; i <= M; ++i)
+  for (int i = 2; i <= m; ++i)
     lg2[i] = lg2[i >> 1] + 1;
-  for (int i = 1; i <= M; ++i)
+  for (int i = 1; i <= m; ++i)
     rmq[0][i] = i;
-  for (int i = 1; (1 << i) < M; ++i)
-    for (int j = 1; j <= M - (1 << i); ++j) {
+  for (int i = 1; (1 << i) < m; ++i)
+    for (int j = 1; j <= m - (1 << i); ++j) {
       int l = 1 << (i - 1);
       rmq[i][j] = rmq[i - 1][j];
       if (depth[rmq[i - 1][j + l]] < depth[rmq[i][j]])
@@ -45,25 +39,4 @@ int find_lca(int u, int v) {
   if (depth[sol] > depth[rmq[l][x + shift]])
     sol = rmq[l][x + shift];
   return tour[sol];
-}
-
-void solve() {
-  fin >> N >> Q;
-  for (int u = 2; u <= N; ++u) {
-    int t;
-    fin >> t;
-    G[t].emplace_back(u);
-  }
-  dfs(1, 0);
-  compute_rmq();
-  for (int q = 0; q < Q; ++q) {
-    int u, v;
-    fin >> u >> v;
-    fout << lca(u, v) << '\n';
-  }
-}
-
-int main() {
-  solve();
-  return 0;
 }
