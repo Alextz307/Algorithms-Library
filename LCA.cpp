@@ -34,7 +34,7 @@ void compute_rmq() {
     }
 }
 
-int lca(int u, int v) {
+int find_lca(int u, int v) {
   int x = first[u], y = first[v];
   if (x > y)
     swap(x, y);
