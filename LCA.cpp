@@ -5,9 +5,9 @@ using namespace std;
 ifstream fin("lca.in");
 ofstream fout("lca.out");
 
-const int NMAX = 2e5 + 5;
-int N, Q, M, tour[NMAX], depth[NMAX], first[NMAX], lg2[NMAX], rmq[18][NMAX];
-vector<int> G[NMAX];
+const int MAXN = 2e5 + 5;
+int N, Q, M, tour[MAXN], depth[MAXN], first[MAXN], lg2[MAXN], rmq[18][MAXN];
+vector<int> G[MAXN];
 
 void dfs(int u, int level) {
   tour[++M] = u;
@@ -63,13 +63,7 @@ void solve() {
   }
 }
 
-void close_files() {
-  fin.close();
-  fout.close();
-}
-
 int main() {
   solve();
-  close_files();
   return 0;
 }
