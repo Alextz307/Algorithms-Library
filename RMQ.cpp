@@ -18,7 +18,7 @@ void compute_rmq(int n) {
       rmq[i][j] = min(rmq[i][j - 1], rmq[i + pw2[j - 1]][j - 1]);
 }
 
-int query_min(int st, int dr) {
+int query(int st, int dr) {
   int diff = dr - st + 1;
   int k = lg2[diff];
   int shift = diff - pw2[k];
