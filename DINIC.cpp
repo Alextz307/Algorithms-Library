@@ -1,7 +1,7 @@
 struct flow_edge {
-    int u, v, cap;
+  int u, v, cap;
 
-    flow_edge(int _u, int _v, int _cap) : u(_u), v(_v), cap(_cap) {}
+  flow_edge(int _u, int _v, int _cap) : u(_u), v(_v), cap(_cap) {}
 };
 
 struct Dinic {
