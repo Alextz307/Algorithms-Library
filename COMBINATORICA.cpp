@@ -16,31 +16,53 @@ int f[1 + MAXN], invf[1 + MAXN];
   return ans;
 } */
  
-int invers(int x) { /// Invers modular
-  int n = mod - 2;
+int Pow(int x, int n) {
   int64_t ans = 1;
   while (n) {
-    if (n & 1)
+    if (n & 1) {
       ans = ans * x % mod;
+    }
     x = (int64_t)x * x % mod;
     n >>= 1;
   }
   return ans;
 }
- 
+
+int invers(int x) {
+  return Pow(x, mod - 2);
+}
+
 int nck(int n, int k) {
-  if (n < k)
+  if (n < k) {
     return 0;
-  if (n == k)
+  }
+  if (n == k) {
     return 1;
+  }
   return (int64_t)f[n] * invf[k] % mod * invf[n - k] % mod;
 }
- 
-void compute_factorial() { /// IMPORTANT!!!
+
+void compute_factorial() {
   f[0] = f[1] = 1;
-  for (int i = 2; i <= MAXN; ++i)
+  for (int i = 2; i <= MAXN; ++i) {
     f[i] = (int64_t)f[i - 1] * i % mod;
+  }
   invf[MAXN] = invers(f[MAXN]);
-  for (int i = MAXN - 1; i >= 0; --i)
+  for (int i = MAXN - 1; i >= 0; --i) {
     invf[i] = (int64_t)invf[i + 1] * (i + 1) % mod;
+  }
+}
+
+void add_self(int &x, const int &y) {
+  x += y;
+  if (x >= mod) {
+    x -= mod;
+  }
+}
+
+void sub_self(int &x, const int &y) {
+  x -= y;
+  if (x < 0) {
+    x += mod;
+  }
 }
