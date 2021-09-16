@@ -9,6 +9,22 @@ vector<vector<vector<int>>> powers;
 /// p(k - 1)   (0 0 0   ...  1)   p(k)
 /// p(k)       (ak ak-1 ... a1)   p(k + 1)
 
+vector<vector<int>> mul(const vector<vector<int>> &a, const vector<vector<int>> &b) {
+  int n = a.size(), m = b[0].size();
+  vector<vector<int>> sol(n, vector<int>(m));
+  for (int i = 0; i < n; ++i) {
+    for (int j = 0; j < m; ++j) {
+      for (int k = 0; k < (int)b.size(); ++k) {
+        sol[i][j] += (int64_t)a[i][k] * b[k][j] % mod;
+        if (sol[i][j] >= mod) {
+          sol[i][j] -= mod;
+        }
+      }
+    }
+  }
+  return sol;
+}
+
 vector<vector<int>> sqr(const vector<vector<int>> &M) {
   vector<vector<int>> sol(L, vector<int>(L));
   for (int i = 0; i < L; ++i) {
