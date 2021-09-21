@@ -1,9 +1,10 @@
 struct DSU {
   int n, cnt;
   vector<int> p, sz;
-  stack<pair<int, int>> st;
+  stack<int> st;
 
-  DSU(int _n) : n(_n) {
+  void init(int _n) {
+    n = _n;
     p.resize(n + 1);
     iota(p.begin(), p.end(), 0);
     sz.resize(n + 1, 1);
@@ -27,28 +28,17 @@ struct DSU {
     }
     p[x] = y;
     sz[y] += sz[x];
-    st.emplace(x, y);
+    st.emplace(x);
     --cnt;
   }
 
-  void rollback() {
-    while (st.top().first) {
-      int x, y;
-      tie(x, y) = st.top();
+  void rollback(int checkpoint) {
+    while ((int)st.size() > checkpoint) {
+      int x = st.top();
       st.pop();
+      sz[p[x]] -= sz[x];
       p[x] = x;
-      sz[y] -= sz[x];
       ++cnt;
     }
-    st.pop();
-  }
-
-  void reset() {
-    iota(p.begin(), p.end(), 0);
-    sz = vector<int>(n + 1, 1);
-    while (!st.empty()) {
-      st.pop();
-    }
-    cnt = n;
   }
 };
