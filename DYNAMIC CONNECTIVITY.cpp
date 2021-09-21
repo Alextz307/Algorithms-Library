@@ -3,7 +3,6 @@
 using namespace std;
 
 const int MAXN = 3e5 + 1;
-bitset<MAXN> asked;
 int cnt[MAXN];
 
 struct qry {
@@ -78,7 +77,7 @@ void solve(int l, int r, const vector <qry> &queries) {
     }
   }
   if (l == r) {
-    if (asked[l]) {
+    if (cnt[l] - cnt[l - 1]) {
       cout << tree.cnt << '\n';
     }
     tree.rollback(checkpoint);
@@ -100,7 +99,6 @@ void test_case() {
     cin >> op;
     cnt[t] = cnt[t - 1];
     if (op == '?') {
-      asked[t] = true;
       ++cnt[t];
       continue;
     }
