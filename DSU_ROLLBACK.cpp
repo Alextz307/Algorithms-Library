@@ -1,10 +1,9 @@
 struct DSU {
-  int n, cnt;
+  int cnt;
   vector<int> p, sz;
   stack<int> st;
 
-  void init(int _n) {
-    n = _n;
+  void init(int n) {
     p.resize(n + 1);
     iota(p.begin(), p.end(), 0);
     sz.resize(n + 1, 1);
