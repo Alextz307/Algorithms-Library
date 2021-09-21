@@ -19,26 +19,29 @@ struct DSU {
     r.assign(n + 1, 1);
   }
 
-  int get(int x) {
-    if (x == p[x])
+  int root(int x) {
+    if (x == p[x]) {
       return x;
-    return p[x] = get(p[x]);
+    }
+    return p[x] = root(p[x]);
   }
 
   int get_size(int u) {
-    return r[get(u)];
+    return r[root(u)];
   }
 
   bool connected(int u, int v) {
-    return get(u) == get(v);
+    return root(u) == root(v);
   }
 
   bool unite(int u, int v) {
-    int x = get(u), y = get(v);
-    if (x == y)
+    int x = root(u), y = root(v);
+    if (x == y) {
       return false;
-    if (r[x] > r[y])
+    }
+    if (r[x] > r[y]) {
       swap(x, y);
+    }
     p[x] = y;
     r[y] += r[x];
     return true;
