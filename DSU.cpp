@@ -1,22 +1,10 @@
-struct edge {
-  int u, v, w;
-
-  void read() {
-    cin >> u >> v >> w;
-  }
-
-  bool operator < (const edge &A) const {
-    return w < A.w;
-  }
-};
-
 struct DSU {
-  vector<int> p, r;
+  vector<int> p, sz;
 
   DSU(int n) {
     p.resize(n + 1);
     iota(p.begin(), p.end(), 0);
-    r.assign(n + 1, 1);
+    sz.assign(n + 1, 1);
   }
 
   int root(int x) {
@@ -26,24 +14,16 @@ struct DSU {
     return p[x] = root(p[x]);
   }
 
-  int get_size(int u) {
-    return r[root(u)];
-  }
-
-  bool connected(int u, int v) {
-    return root(u) == root(v);
-  }
-
   bool unite(int u, int v) {
     int x = root(u), y = root(v);
     if (x == y) {
       return false;
     }
-    if (r[x] > r[y]) {
+    if (sz[x] > sz[y]) {
       swap(x, y);
     }
     p[x] = y;
-    r[y] += r[x];
+    sz[y] += sz[x];
     return true;
   }
 };
