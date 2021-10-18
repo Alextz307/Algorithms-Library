@@ -8,7 +8,7 @@
 using namespace std;
 using namespace __gnu_pbds;
 
-typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_update> ordered_set;
+typedef tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update> ordered_set;
 
 const int di[] = {-1, 0, 1, 0},
           dj[] = {0, 1, 0, -1};
