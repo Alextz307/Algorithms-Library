@@ -19,7 +19,6 @@ struct treapNode {
 using pt = pair<treapNode*, treapNode*>;
 
 /*
-
       r                         R
      / \      Left Rotate      / \
     L   R        ———>         r  Y
@@ -36,7 +35,6 @@ void rotateLeft(treapNode* &node) {
 }
 
 /*
-
         r                        L
        / \     Right Rotate     / \
       L   R       ———>         X   r
