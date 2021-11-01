@@ -146,6 +146,19 @@ int getMax(treapNode* node) {
   return node->key;
 }
 
+bool check(treapNode* node, int x) {
+  if (node == nullptr) {
+    return false;
+  }
+  if (node->key == x) {
+    return true;
+  }
+  if (x < node->key) {
+    return check(node->l, x);
+  }
+  return check(node->r, x);
+}
+
 void TestCase() {
   int n;
   fin >> n;
