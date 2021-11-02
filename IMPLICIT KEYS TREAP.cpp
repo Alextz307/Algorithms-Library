@@ -34,6 +34,37 @@ void updateSize(treapNode* node) {
   }
 }
 
+void heapify(treapNode* node) {
+  if (node == emptyNode) {
+    return;
+  }
+  treapNode* best = node;
+  if (best->prior < node->l->prior) {
+    best = node->l;
+  }
+  if (best->prior < node->r->prior) {
+    best = node->r;
+  }
+  if (best != node) {
+    swap(node->prior, best->prior);
+    heapify(best);
+  }
+}
+
+treapNode* build(int st, int dr) {
+  int mid = (st + dr) >> 1;
+  treapNode* node = new treapNode{emptyNode, emptyNode, mid, rng() % mod, 1, false};
+  if (st < mid) {
+    node->l = build(st, mid - 1);
+  }
+  if (mid < dr) {
+    node->r = build(mid + 1, dr);
+  }
+  heapify(node);
+  updateSize(node);
+  return node;
+}
+
 pt split(treapNode* node, int k) {
   if (node == emptyNode) {
     return {emptyNode, emptyNode};
