@@ -1,8 +1,3 @@
-#include <bits/stdc++.h>
-#define int long long
-
-using namespace std;
-
 const int64_t INF = -1e18L;
 
 struct line {
@@ -74,24 +69,3 @@ struct dynamicHull : public multiset<line> {
     return l.m * x + l.b;
   }
 };
-
-int32_t main() {
-    ios_base::sync_with_stdio(false);
-    cin.tie(nullptr);
-    cout.tie(nullptr);
-    int N;
-    cin >> N;
-    vector<int> a(N), b(N);
-    for(int &x : a)
-        cin >> x;
-    for(int &x : b)
-        cin >> x;
-    dynamicHull  cht;
-    vector<int> dp(N);
-    cht.insertLine(-b[0], 0);
-    for(int i = 0; i < N; ++i) {
-        dp[i] = -cht.eval(a[i]);
-        cht.insertLine(-b[i], -dp[i]);
-    }
-    cout << dp[N - 1] << '\n';
-}
