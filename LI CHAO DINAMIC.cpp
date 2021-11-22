@@ -1,3 +1,4 @@
+/// MIN
 struct line {
   int m;
   int64_t b;
