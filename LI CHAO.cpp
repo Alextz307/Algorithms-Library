@@ -1,3 +1,4 @@
+/// MAX
 struct line {
   int m, b;
 
