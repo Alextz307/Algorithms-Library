@@ -1,11 +1,3 @@
-struct line {
-  int m, b;
-
-  int eval(int x) {
-    return m * x + b;
-  }
-};
-
 struct ST {
   vector<line> t;
 
@@ -37,11 +29,11 @@ struct ST {
   }
 
   int query(int x, int lx, int rx, int pos) {
+    int val = t[x].eval(pos);
     if (lx == rx) {
-      return t[x].eval(pos);
+      return val;
     }
     int mid = (lx + rx) >> 1;
-    int val = t[x].eval(pos);
     if (pos <= mid) {
       return max(val, query(x << 1, lx, mid, pos));
     }
