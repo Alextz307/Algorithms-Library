@@ -23,18 +23,18 @@ struct CHT {
     return (ld)(b2 - b1) / (m1 - m2);
   }
  
-  void addLine(int m, int b, int fIndex) {
+  void addLine(int m, int b) {
     while (l <= r) {
       line l = hull[r];
       if ((int64_t)l.m * l.start + l.b < (int64_t)m * l.start + b) {
         if (l.m != m) {
-          hull[++r] = {findIntersection(l.m, l.b, m, b), m, b, fIndex};
+          hull[++r] = {findIntersection(l.m, l.b, m, b), m, b};
         }
         return;
       }
       --r;
     }
-    hull[++r] = {INF, m, b, fIndex};
+    hull[++r] = {INF, m, b};
   }
  
   int64_t query(int x) {
