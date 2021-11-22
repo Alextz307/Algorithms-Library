@@ -1,3 +1,5 @@
+const int kN = 1e5;
+
 struct line {
   ld start;
   int m, b;
