@@ -1,4 +1,6 @@
+/// MAX-HULL
 const int kN = 1e5;
+const int INF = -2e9;
 
 struct line {
   ld start;
