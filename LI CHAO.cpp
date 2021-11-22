@@ -1,3 +1,11 @@
+struct line {
+  int m, b;
+
+  int eval(int x) {
+    return m * x + b;
+  }
+};
+
 struct ST {
   vector<line> t;
 
