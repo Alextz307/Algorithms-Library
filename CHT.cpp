@@ -36,11 +36,18 @@ struct CHT {
     }
     hull[++r] = {INF, m, b};
   }
- 
+  
   int64_t query(int x) {
+    while (l + 1 <= r && hull[l + 1].eval(x) <= hull[l].eval(x)) {
+      ++l;
+    }
+    return hull[l].eval(x);
+  }
+ 
+  /* int64_t query(int x) {
     line ln = *--upper_bound(hull.begin() + l, hull.begin() + r + 1, x, [](int y, line ll) -> bool {
       return y < ll.start;
     });
     return ln.eval(x);
-  }
+  } */
 };
