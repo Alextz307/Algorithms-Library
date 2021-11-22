@@ -1,3 +1,4 @@
+/// MAX-HULL
 const int64_t INF = -1e18L;
 
 struct line {
