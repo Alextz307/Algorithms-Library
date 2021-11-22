@@ -38,7 +38,7 @@ struct CHT {
   }
  
   int64_t query(int x) {
-    line ln = *--upper_bound(hull.begin() + l, hull.begin() + r + 1, x, [&](int y, line ll) -> bool {
+    line ln = *--upper_bound(hull.begin() + l, hull.begin() + r + 1, x, [](int y, line ll) -> bool {
       return y < ll.start;
     });
     return ln.eval(x);
