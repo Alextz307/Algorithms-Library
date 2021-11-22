@@ -2,21 +2,9 @@
 const int kN = 1e5;
 const int INF = -2e9;
  
-struct func {
-  int m, b, fIndex;
- 
-  void read() {
-    fin >> m >> b;
-  }
- 
-  bool operator < (const func &A) const {
-    return m > A.m;
-  }
-} f[kN];
- 
 struct line {
   ld start;
-  int m, b, fIndex;
+  int m, b;
  
   int64_t eval(int x) {
     return (int64_t)m * x + b;
@@ -49,10 +37,10 @@ struct CHT {
     hull[++r] = {INF, m, b, fIndex};
   }
  
-  int query(int x) {
+  int64_t query(int x) {
     line ln = *--upper_bound(hull.begin() + l, hull.begin() + r + 1, x, [&](int y, line ll) -> bool {
       return y < ll.start;
     });
-    return ln.fIndex;
+    return ln.eval(x);
   }
 };
