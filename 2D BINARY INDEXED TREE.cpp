@@ -1,66 +1,61 @@
 struct FenwickTree2D {
   int n;
-  vector<vector<int>> vals, tree;
+  vector<vector<int>> vals, aib;
 
-  FenwickTree2D(int N) {
+  void init(int N) {
     n = N;
     vals.resize(n + 1);
-    tree.resize(n + 1);
+    aib.resize(n + 1);
   }
 
-  void allocate(int x, int y) {
-    while (x <= n) {
-      vals[x].emplace_back(y);
-      x += x & -x;
+  void allocate(int x, int v) {
+    for (int i = x; i <= n; i += i & -i) {
+      vals[i].emplace_back(v);
     }
   }
 
-  void init() {
+  void build() {
     for (int i = 1; i <= n; ++i) {
       sort(vals[i].begin(), vals[i].end());
       vals[i].erase(unique(vals[i].begin(), vals[i].end()), vals[i].end());
-      tree[i].resize(vals[i].size() + 1);
+      aib[i].resize(1 + vals[i].size());
     }
   }
 
-  void update(int x, int y, int val) {
-    while (x <= n) {
-      int pos = lower_bound(vals[x].begin(), vals[x].end(), y) - vals[x].begin();
-      for (++pos; pos < (int)tree[x].size(); pos += pos & -pos)
-        tree[x][pos] += val;
-      x += x & -x;
+  void updateAib(int x, int v, int f) {
+    int pos = upper_bound(vals[x].begin(), vals[x].end(), v) - vals[x].begin();
+    for (int i = pos; i < (int)aib[x].size(); i += i & -i) {
+      aib[x][i] += f;
     }
   }
 
-  int calc(int x, int val) {
-    int pos = upper_bound(vals[x].begin(), vals[x].end(), val) - vals[x].begin() - 1;
-    int ans = 0;
-    for (++pos; pos > 0; pos = pos & (pos - 1))
-      ans += tree[x][pos];
-    return ans;
+  void update(int x, int v, int f) {
+    for (int i = x; i <= n; i += i & -i) {
+      updateAib(i, v, f);
+    }
   }
 
-  int query(int x, int val) {
+  int queryAib(int x, int v) {
+    int pos = upper_bound(vals[x].begin(), vals[x].end(), v) - vals[x].begin();
     int ans = 0;
-    while (x > 0) {
-      ans += calc(x, val);
-      x = x & (x - 1);
+    for (int i = pos; i > 0; i = i & (i - 1)) {
+      ans += aib[x][i];
     }
     return ans;
   }
 
-  /* int query_interval(int st, int dr, int val) {
+  int query(int x, int v) {
     int ans = 0;
-    while (dr > 0) {
-      ans += calc(dr, val);
-      dr = dr & (dr - 1);
+    for (int i = x; i > 0; i = i & (i - 1)) {
+      ans += queryAib(i, v);
     }
-    for (--st; st > 0; st = st & (st - 1))
-      ans -= calc(st, val);
     return ans;
-  } */
+  }
 
-  int query_interval(int st, int dr, int val) {
-    return query(dr, val) - query(st - 1, val);
+  int queryInterval(int l, int r, int v) {
+    if (r < l) {
+      return 0;
+    }
+    return query(r, v) - query(l - 1, v);
   }
 };
