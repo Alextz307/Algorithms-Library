@@ -44,6 +44,13 @@ struct FenwickTree2D {
     return ans;
   }
 
+  int queryIntervalAib(int x, int l, int r) {
+    if (r < l) {
+      return 0;
+    }
+    return queryAib(x, r) - queryAib(x, l - 1);
+  }
+
   int query(int x, int v) {
     int ans = 0;
     for (int i = x; i > 0; i = i & (i - 1)) {
