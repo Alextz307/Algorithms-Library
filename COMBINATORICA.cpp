@@ -1,7 +1,6 @@
 const int mod = 1e9 + 7;
-/// const int mod = 666013;
-const int MAXN = 1e5;
-int f[1 + MAXN], invf[1 + MAXN];
+const int kN = 1e5;
+int f[1 + kN], invf[1 + kN];
  
 /* int64_t nck(int N, int K) { Combinari in O(N)
   if (K < N - K)
@@ -16,22 +15,43 @@ int f[1 + MAXN], invf[1 + MAXN];
   return ans;
 } */
  
+void addSelf(int &x, const int &y) {
+  x += y;
+  if (x >= mod) {
+    x -= mod;
+  }
+}
+ 
+int add(int x, const int &y) {
+  addSelf(x, y);
+  return x;
+}
+ 
+void multSelf(int &x, const int &y) {
+  x = (int64_t)x * y % mod;
+}
+ 
+int mult(int x, const int &y) {
+  multSelf(x, y);
+  return x;
+}
+ 
 int Pow(int x, int n) {
-  int64_t ans = 1;
+  int ans = 1;
   while (n) {
     if (n & 1) {
-      ans = ans * x % mod;
+      ans = mult(ans, x);
     }
-    x = (int64_t)x * x % mod;
+    multSelf(x, x);
     n >>= 1;
   }
   return ans;
 }
-
+ 
 int invers(int x) {
   return Pow(x, mod - 2);
 }
-
+ 
 int nck(int n, int k) {
   if (n < k) {
     return 0;
@@ -39,30 +59,16 @@ int nck(int n, int k) {
   if (n == k) {
     return 1;
   }
-  return (int64_t)f[n] * invf[k] % mod * invf[n - k] % mod;
+  return mult(f[n], mult(invf[k], invf[n - k]));
 }
-
-void compute_factorial() {
+ 
+void computeFactorials(int n) {
   f[0] = f[1] = 1;
-  for (int i = 2; i <= MAXN; ++i) {
-    f[i] = (int64_t)f[i - 1] * i % mod;
+  for (int i = 2; i <= n; ++i) {
+    f[i] = mult(f[i - 1], i);
   }
-  invf[MAXN] = invers(f[MAXN]);
-  for (int i = MAXN - 1; i >= 0; --i) {
-    invf[i] = (int64_t)invf[i + 1] * (i + 1) % mod;
-  }
-}
-
-void add_self(int &x, const int &y) {
-  x += y;
-  if (x >= mod) {
-    x -= mod;
-  }
-}
-
-void sub_self(int &x, const int &y) {
-  x -= y;
-  if (x < 0) {
-    x += mod;
+  invf[n] = invers(f[n]);
+  for (int i = n - 1; i >= 0; --i) {
+    invf[i] = mult(invf[i + 1], i + 1);
   }
 }
