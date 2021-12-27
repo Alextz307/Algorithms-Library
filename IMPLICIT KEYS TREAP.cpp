@@ -2,35 +2,25 @@
 
 using namespace std;
 
-ifstream fin("secv8.in");
-ofstream fout("secv8.out");
-
-const int mod = 805306457;
-mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+ifstream fin("grid.in");
+ofstream fout("grid.out");
 
 struct treapNode {
   treapNode* l;
   treapNode* r;
   int key, prior, sz;
-  bool rev;
 };
 
-using pt = pair<treapNode*, treapNode*>;
-treapNode* emptyNode = new treapNode{nullptr, nullptr, -1, -1, 0, false};
-treapNode* root = emptyNode;
+using ptr = treapNode*;
+using pt = pair<ptr, ptr>;
+const int mod = 1610612741;
+ptr emptyNode = new treapNode{nullptr, nullptr, 0, -1, 0};
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+int n, k;
 
-void push(treapNode* node) {
-  if (node != emptyNode && node->rev) {
-    swap(node->l, node->r);
-    node->l->rev ^= 1;
-    node->r->rev ^= 1;
-    node->rev = false;
-  }
-}
-
-void updateSize(treapNode* node) {
+void updateNode(ptr node) {
   if (node != emptyNode) {
-    node->sz = 1 + node->l->sz + node->r->sz;
+    node->sz = node->l->sz + 1 + node->r->sz;
   }
 }
 
@@ -51,76 +41,54 @@ void heapify(treapNode* node) {
   }
 }
 
-treapNode* build(int st, int dr) {
+treapNode* build(int st, int dr, int lin) {
   int mid = (st + dr) >> 1;
-  treapNode* node = new treapNode{emptyNode, emptyNode, mid, rng() % mod, 1, false};
+  treapNode* node = new treapNode{emptyNode, emptyNode, mid + lin * n, rng() % mod, 1};
   if (st < mid) {
-    node->l = build(st, mid - 1);
+    node->l = build(st, mid - 1, lin);
   }
   if (mid < dr) {
-    node->r = build(mid + 1, dr);
+    node->r = build(mid + 1, dr, lin);
   }
   heapify(node);
-  updateSize(node);
+  updateNode(node);
   return node;
 }
 
-pt split(treapNode* node, int k) {
+pt split(ptr node, int k) {
   if (node == emptyNode) {
     return {emptyNode, emptyNode};
   }
-  push(node);
   if (node->l->sz < k) {
     pt p = split(node->r, k - node->l->sz - 1);
     node->r = p.first;
-    updateSize(node);
+    updateNode(node);
     return {node, p.second};
   }
   pt p = split(node->l, k);
   node->l = p.second;
-  updateSize(node);
+  updateNode(node);
   return {p.first, node};
 }
 
-treapNode* join(treapNode* A, treapNode* B) {
+ptr join(ptr A, ptr B) {
   if (A == emptyNode) {
     return B;
   }
   if (B == emptyNode) {
     return A;
   }
-  push(A);
-  push(B);
   if (B->prior < A->prior) {
     A->r = join(A->r, B);
-    updateSize(A);
+    updateNode(A);
     return A;
   }
   B->l = join(A, B->l);
-  updateSize(B);
+  updateNode(B);
   return B;
 }
 
-treapNode* ins(treapNode* node, int k, treapNode* newNode) {
-  pt p = split(node, k - 1);
-  return join(join(p.first, newNode), p.second);
-}
-
-treapNode* rev(treapNode* node, int st, int dr) {
-  pt p1 = split(node, st - 1);
-  pt p2 = split(p1.second, dr - st + 1);
-  p2.first->rev ^= 1;
-  return join(join(p1.first, p2.first), p2.second);
-}
-
-treapNode* rem(treapNode* node, int st, int dr) {
-  pt p1 = split(node, st - 1);
-  pt p2 = split(p1.second, dr - st + 1);
-  return join(p1.first, p2.second);
-}
-
-int getElement(treapNode* node, int k) {
-  push(node);
+int getElement(ptr node, int k) {
   if (node->l->sz + 1 == k) {
     return node->key;
   }
@@ -130,57 +98,50 @@ int getElement(treapNode* node, int k) {
   return getElement(node->r, k - node->l->sz - 1);
 }
 
-void inOrder(treapNode* node) {
+ptr ins(ptr node, int k, ptr newNode) {
+  pt p = split(node, k - 1);
+  return join(join(p.first, newNode), p.second);
+}
+
+ptr del(ptr node, int k) {
+  pt p1 = split(node, k - 1);
+  pt p2 = split(p1.second, 1);
+  return join(p1.first, p2.second);
+}
+
+void dfs(ptr node) {
   if (node == emptyNode) {
     return;
   }
-  push(node);
-  inOrder(node->l);
+  dfs(node->l);
   fout << node->key << ' ';
-  inOrder(node->r);
+  dfs(node->r);
 }
 
-void solveQuery(int i) {
-  char op;
-  fin >> op;
-  if (op == 'A') {
-    int k;
-    fin >> k;
-    fout << getElement(root, k) << '\n';
-    return;
+void testCase() {
+  fin >> n >> k;
+  ptr roots[3];
+  for (int i = 0; i < 3; ++i) {
+    roots[i] = build(1, n, i);
   }
-  if (op == 'I') {
-    int k, x;
-    fin >> k >> x;
-    root = ins(root, k, new treapNode{emptyNode, emptyNode, x, rng() % mod, 1, false});
-    return;
+  for (int i = 0; i < k; ++i) {
+    int x1, y1, x2, y2;
+    fin >> x1 >> y1 >> x2 >> y2;
+    y1 += 1, y2 += 1;
+    int key = getElement(roots[x1], y1);
+    roots[x1] = del(roots[x1], y1);
+    roots[x2] = ins(roots[x2], y2, new treapNode{emptyNode, emptyNode, key, rng() % mod, 1});
   }
-  if (op == 'R') {
-    int st, dr;
-    fin >> st >> dr;
-    root = rev(root, st, dr);
-    return;
+  for (int i = 0; i < 3; ++i) {
+    dfs(roots[i]);
+    fout << '\n';
   }
-  int st, dr;
-  fin >> st >> dr;
-  root = rem(root, st, dr);
-}
-
-void TestCase() {
-  int q;
-  bool ok_rev;
-  fin >> q >> ok_rev;
-  for (int i = 1; i <= q; ++i) {
-    solveQuery(i);
-  }
-  inOrder(root);
-  fout << '\n';
 }
 
 int main() {
   int tests = 1;
-  for (int tc = 1; tc <= tests; ++tc) {
-    TestCase();
+  for (int tc = 0; tc < tests; ++tc) {
+    testCase();
   }
   fin.close();
   fout.close();
