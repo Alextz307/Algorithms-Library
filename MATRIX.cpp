@@ -60,7 +60,7 @@ vector<int> multiply(const vector<int> &v, const vector<vector<int>> &M) {
   vector<int> sol(L);
   for (int i = 0; i < L; ++i) {
     for (int j = 0; j < L; ++j) {
-      sol[i] += (int64_t)v[j] * M[i][j] % mod;
+      sol[i] += (int64_t)v[j] * M[j][i] % mod;
       if (sol[i] >= mod) {
         sol[i] -= mod;
       }
