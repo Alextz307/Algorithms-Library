@@ -3,12 +3,6 @@ int L, a[20];
 int64_t p2[64];
 vector<vector<vector<int>>> powers;
 
-/// p(1)       (0 1 0   ...  0)   p(2)
-/// p(2)       (0 0 1   ...  0)   p(3)
-/// ........ X ................ = ........
-/// p(k - 1)   (0 0 0   ...  1)   p(k)
-/// p(k)       (ak ak-1 ... a1)   p(k + 1)
-
 vector<vector<int>> mul(const vector<vector<int>> &a, const vector<vector<int>> &b) {
   int n = a.size(), m = b[0].size();
   vector<vector<int>> sol(n, vector<int>(m));
