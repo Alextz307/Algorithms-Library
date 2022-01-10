@@ -1,5 +1,5 @@
 const int mod = 1e9 + 7;
-int L, a[20];
+int L;
 int64_t p2[64];
 vector<vector<vector<int>>> powers;
 
