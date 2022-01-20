@@ -40,7 +40,7 @@ int Pow(int x, int n) {
   int ans = 1;
   while (n) {
     if (n & 1) {
-      ans = mult(ans, x);
+      multSelf(ans, x);
     }
     multSelf(x, x);
     n >>= 1;
