@@ -11,17 +11,19 @@ struct ST {
     lazy.resize(dim * 2);
   }
  
-  void updateNode(int x, int v) {
+  void updateNode(int x, int len, int v) {
     t[x] += v;
     lazy[x] += v;
   }
  
-  void push(int x) {
+  void push(int x, int lx, int rx) {
     if (lazy[x] == 0) {
       return;
     }
-    updateNode(x * 2, lazy[x]);
-    updateNode(x * 2 + 1, lazy[x]);
+    int mid = (lx + rx) / 2;
+    int len[] = {mid - lx + 1, rx - mid};
+    updateNode(x * 2, len[i], lazy[x]);
+    updateNode(x * 2 + 1, len[i], lazy[x]);
     lazy[x] = 0;
   }
  
@@ -30,10 +32,10 @@ struct ST {
       return;
     }
     if (st <= lx && rx <= dr) {
-      updateNode(x, v);
+      updateNode(x, rx - lx + 1, v);
       return;
     }
-    push(x);
+    push(x, lx, rx);
     int mid = (lx + rx) / 2;
     if (st <= mid) {
       update(x * 2, lx, mid, st, dr, v);
@@ -52,7 +54,7 @@ struct ST {
     if (st <= lx && rx <= dr) {
       return t[x];
     }
-    push(x);
+    push(x, lx, rx);
     int mid = (lx + rx) / 2, ans = -INF;
     if (st <= mid) {
       maxSelf(ans, query(x * 2, lx, mid, st, dr));
