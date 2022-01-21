@@ -21,9 +21,8 @@ struct ST {
       return;
     }
     int mid = (lx + rx) / 2;
-    int len[] = {mid - lx + 1, rx - mid};
-    updateNode(x * 2, len[i], lazy[x]);
-    updateNode(x * 2 + 1, len[i], lazy[x]);
+    updateNode(x * 2, mid - lx + 1, lazy[x]);
+    updateNode(x * 2 + 1, rx - mid, lazy[x]);
     lazy[x] = 0;
   }
  
