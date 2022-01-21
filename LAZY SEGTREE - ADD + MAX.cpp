@@ -10,7 +10,18 @@ struct ST {
     t.resize(dim * 2);
     lazy.resize(dim * 2);
   }
- 
+  
+  void build(int x, int lx, int rx) {
+    if (lx == rx) {
+      
+      return;
+    }
+    int mid = (lx + rx) / 2;
+    build(x * 2, lx, mid);
+    build(x * 2 + 1, mid + 1, rx);
+    t[x] = max(t[x * 2], t[x * 2 + 1]);
+  }
+  
   void updateNode(int x, int len, int v) {
     t[x] += v;
     lazy[x] += v;
