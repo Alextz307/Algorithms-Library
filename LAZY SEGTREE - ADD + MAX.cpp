@@ -7,8 +7,9 @@ struct ST {
     while (dim < n) {
       dim *= 2;
     }
-    t.resize(dim * 2);
-    lazy.resize(dim * 2);
+    dim *= 2;
+    t.resize(dim);
+    lazy.resize(dim);
   }
   
   void build(int x, int lx, int rx) {
