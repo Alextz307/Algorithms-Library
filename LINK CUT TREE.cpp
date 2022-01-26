@@ -56,11 +56,11 @@ struct LCT {
     }
   }
 
-  bool isChainTop(node* x) {
+  bool isChainTop(node* x) { 
     return x->p == nullptr || (x->p->l != x && x->p->r != x);
   }
 
-  void push(node* x) {
+  void push(node* x) { 
     if (x->rev) {
       swap(x->l, x->r);
       if (x->l) {
@@ -73,7 +73,7 @@ struct LCT {
     }
   }
 
-  void makeRotation(node* x) {
+  void makeRotation(node* x) { 
     node* y = x->p;
     node* z = y->p;
     if (!isChainTop(y)) {
@@ -102,7 +102,7 @@ struct LCT {
     x->p = z;
   }
 
-  void splay(node* x) {
+  void splay(node* x) { /// x devine radacina in splay-ul sau
     while (!isChainTop(x)) {
       node* y = x->p;
       node* z = y->p;
