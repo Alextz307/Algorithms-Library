@@ -189,7 +189,7 @@ struct LCT {
   void link(node* x, node* y) { /// il face pe x copilul lui y
     access(x);
     access(y);
-    x->l = y;
+    x->l = y; /// in stanga ca e mai sus(fiind parinte)
     y->p = x;
     y->pp = nullptr;
     updateNode(x);
@@ -201,7 +201,7 @@ struct LCT {
 
   void cut(node* x) { /// taie legatura parinte->x
     access(x);
-    x->l->p = nullptr;
+    x->l->p = nullptr; /// parintele este mai sus
     x->l = nullptr;
     updateNode(x);
   }
