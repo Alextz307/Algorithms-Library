@@ -29,7 +29,7 @@ void buildSuff() {
     idx[s[i] - 'a'] = 1;
   }
   int cnt = 0;
-  for (int i = 0; i < 26; ++i) {
+  for (int i = 0; i < kSigma; ++i) {
     if (idx[i]) {
       idx[i] = ++cnt;
     }
