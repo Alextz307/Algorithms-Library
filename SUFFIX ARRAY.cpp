@@ -3,7 +3,7 @@
 using namespace std;
 
 const int kN = 4e5;
-const int kSigma = 26;
+const int kSigma = 26; /// !
 int n, idx[kSigma], order[kN], code[kN], nextCode[kN], aux[kN], inv[kN], lcp[kN], freq[1 + kN], pos[1 + kN];
 string s;
 
@@ -26,7 +26,7 @@ void countingSort(int a[], int c[]) {
 
 void buildSuff() {
   for (int i = 0; i < n; ++i) {
-    idx[s[i] - 'a'] = 1;
+    idx[s[i] - 'a'] = 1; /// !!!
   }
   int cnt = 0;
   for (int i = 0; i < kSigma; ++i) {
@@ -36,7 +36,7 @@ void buildSuff() {
   }
   for (int i = 0; i < n; ++i) {
     order[i] = i;
-    code[i] = idx[s[i] - 'a'];
+    code[i] = idx[s[i] - 'a']; /// !!!
   }
   countingSort(order, code);
   int k = 1;
