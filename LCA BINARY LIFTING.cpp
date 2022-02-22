@@ -1,26 +1,55 @@
-void dfs(int u, int p) {
-  anc[u][0] = parent;
-  for (int i = 1; i <= lg; ++i)
-    anc[u][i] = anc[anc[u][i - 1]][i - 1];
-  for (int v : G[u])
-    if (v != p) {
-      level[v] = level[u] + 1;
-      dfs(v, u);
-    }
+const int kN = 5e5;
+const int kLog = 18;
+int timer, tin[kN], tout[kN], depth[kN], lg2[kN], anc[kN][1 + kLog];
+vector<pair<int, int>> g[kN];
+int64_t dp[kN];
+
+void precalc() {
+  for (int i = 2; i < kN; ++i) {
+    lg2[i] = lg2[i / 2] + 1;
+  }
 }
 
-int lca(int u, int v) {
-  if (level[u] < level[v])
+void dfs(int u) {
+  tin[u] = ++timer;
+  for (int i = 1; i <= kLog; ++i) {
+    anc[u][i] = anc[anc[u][i - 1]][i - 1];
+    if (anc[u][i] == 0) {
+      break;
+    }
+  }
+  for (auto it : g[u]) {
+    int v, w;
+    tie(v, w) = it;
+    if (v != anc[u][0]) {
+      anc[v][0] = u;
+      depth[v] = depth[u] + 1;
+      dp[v] = dp[u] + w;
+      dfs(v);
+    }
+  }
+  tout[u] = timer;
+}
+
+bool isAncestor(int u, int v) {
+  return tin[u] <= tin[v] && tout[v] <= tout[u];
+}
+
+int getLca(int u, int v) {
+  if (depth[u] < depth[v]) {
     swap(u, v);
-  for (int i = lg; i >= 0; --i)
-    if (level[u] - (1 << i) >= level[v])
-      u = anc[u][i];
-  if (u == v)
-    return u;
-  for (int i = lg; i >= 0; --i)
-    if (anc[u][i] != anc[v][i]) {
-      u = anc[u][i];
+  }
+  if (isAncestor(v, u)) {
+    return v;
+  }
+  for (int i = lg2[depth[v]]; i >= 0; --i) {
+    if (anc[v][i] && !isAncestor(anc[v][i], u)) {
       v = anc[v][i];
     }
-  return anc[u][0];
+  }
+  return anc[v][0];
+}
+
+int64_t getDist(int u, int v, int lca) {
+  return dp[u] + dp[v] - 2 * dp[lca];
 }
