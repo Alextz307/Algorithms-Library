@@ -2,14 +2,14 @@
 
 using namespace std;
 
-ifstream fin("dorel.in");
-ofstream fout("dorel.out");
+ifstream fin("unicat.in");
+ofstream fout("unicat.out");
 
-const int kN = 1e4 + 4;
+const int kN = 5e5 + 5;
 
 struct node {
-  short nxt[26];
-  short len, failLink;
+  int nxt[26];
+  int len, failLink;
   char mask;
 
   node() {
@@ -20,21 +20,7 @@ struct node {
     failLink = 0;
     mask = 0;
   }
-} ptr[kN];
-
-void maxSelf(int &x, int y) {
-  if (x < y) {
-    x = y;
-  }
-}
-
-void minSelf(int &x, int y) {
-  if (y < x) {
-    x = y;
-  }
-}
-
-node NIL;
+} NIL, ptr[kN];
 
 struct PalindromicTree {
   int cnt, last;
@@ -80,7 +66,7 @@ struct PalindromicTree {
     int ans = 0;
     for (int i = 1; i <= cnt; ++i) {
       if (ptr[i].mask == 3) {
-        maxSelf(ans, ptr[i].len);
+        ans += 1;
       }
     }
     return ans;
@@ -88,43 +74,20 @@ struct PalindromicTree {
 };
 
 void testCase() {
-  string ss;
-  fin >> ss;
-  int n = ss.size();
-  ss = '$' + ss;
-  int q;
-  fin >> q;
-  for (int qq = 0; qq < q; ++qq) {
-    int k;
-    fin >> k;
-    int st = k - 1, dr = k + 1;
-    while (st > 0 && ss[st] < ss[k]) {
-      st -= 1;
-    }
-    maxSelf(st, 1);
-    while (dr <= n && ss[k] < ss[dr]) {
-      dr += 1;
-    }
-    minSelf(dr, n);
-    string s = "$", t = "$";
-    for (int i = 1; i <= n; ++i) {
-      if (st <= i && i <= dr) {
-        t += ss[i];
-      } else {
-        s += ss[i];
-      }
-    }
-    PalindromicTree pt;
-    for (int i = 1; i < (int)s.size(); ++i) {
-      pt.extend(s, i, 0);
-    }
-    pt.last = 1;
-    for (int i = 1; i < (int)t.size(); ++i) {
-      pt.extend(t, i, 1);
-    }
-    fout << pt.solve() << ' ';
+  string s, t;
+  fin >> s >> t;
+  int n = s.size(), m = t.size();
+  s = '$' + s;
+  t = '$' + t;
+  PalindromicTree pt;
+  for (int i = 1; i <= n; ++i) {
+    pt.extend(s, i, 0);
   }
-  fout << '\n';
+  pt.last = 1;
+  for (int i = 1; i <= m; ++i) {
+    pt.extend(t, i, 1);
+  }
+  fout << pt.solve() << '\n';
 }
 
 int main() {
