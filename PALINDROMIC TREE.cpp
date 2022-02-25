@@ -1,3 +1,4 @@
+	
 #include <bits/stdc++.h>
  
 using namespace std;
@@ -7,8 +8,8 @@ ofstream fout("unicat.out");
  
 struct node {
   node* nxt[26];
-  node* failLink; /// pointer la cel mai lung sufix care este palindrom(diferit de tot palindromul)
-  int len; /// lungimea
+  node* failLink;
+  int len;
   short mask;
  
   node() {
@@ -21,17 +22,11 @@ struct node {
   }
 };
  
-void maxSelf(int64_t &x, int64_t y) {
-  if (x < y) {
-    x = y;
-  }
-}
- 
 struct PalindromicTree {
   node* odd;
   node* even;
-  node* last; /// ultimul nod in care am ajuns pana acum
-  vector<node*> nodes; /// palindromurile obtinute in ordinea in care apar in sir
+  node* last;
+  vector<node*> nodes;
  
   PalindromicTree() {
     odd = new node();
@@ -45,7 +40,7 @@ struct PalindromicTree {
   }
  
   void extend(const string &s, int pos, int bit) {
-    while (last != odd && s[pos - last->len - 1] != s[pos]) {
+    while (s[pos - last->len - 1] != s[pos]) {
       last = last->failLink;
     }
     int ch = s[pos] - 'a';
@@ -64,14 +59,10 @@ struct PalindromicTree {
     if (last->len == 1) {
       return;
     }
-    while (suff != odd && s[pos - suff->len - 1] != s[pos]) {
+    while (s[pos - suff->len - 1] != s[pos]) {
       suff = suff->failLink;
     }
-    if (suff->nxt[ch]) {
-      last->failLink = suff->nxt[ch];
-    } else {
-      last->failLink = even;
-    }
+    last->failLink = suff->nxt[ch];
   }
  
   int solve() {
@@ -93,6 +84,7 @@ void testCase() {
   for (int i = 1; i <= n; ++i) {
     pt.extend(s, i, 0);
   }
+  pt.last = pt.odd;
   for (int i = 1; i <= m; ++i) {
     pt.extend(t, i, 1);
   }
