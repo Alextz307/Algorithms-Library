@@ -2,75 +2,7 @@
 
 using namespace std;
 
-const int buffDim = 1 << 13;
-
-struct InParser {
-  FILE* fin;
-  char* buff;
-  int sp;
-
-  char read_ch() {
-    ++sp;
-    if (sp == buffDim) {
-      sp = 0;
-      fread(buff, 1, buffDim, fin);
-    }
-    return buff[sp];
-  }
-
-  InParser(const char* nume) {
-    fin = fopen(nume, "r");
-    buff = new char[buffDim]();
-    sp = buffDim - 1;
-  }
-
-  InParser& operator >> (char &ch) {
-    char c = read_ch();
-    ch = c;
-    return *this;
-  }
-
-  InParser& operator >> (int &n) {
-    char c;
-    while (!isdigit(c = read_ch()) && c != '-');
-    int sgn = 1;
-    if (c == '-') {
-      n = 0;
-      sgn = -1;
-    } else {
-      n = c - '0';
-    }
-    while (isdigit(c = read_ch())) {
-      n = 10 * n + c - '0';
-    }
-    n *= sgn;
-    return *this;
-  }
-
-  InParser & operator >> (long long &n) {
-    char c;
-    n = 0;
-    while (!isdigit(c = read_ch()) && c != '-');
-    long long sgn = 1;
-    if (c == '-') {
-      n = 0;
-      sgn = -1;
-    } else {
-      n = c - '0';
-    }
-    while (isdigit(c = read_ch())) {
-      n = 10 * n + c - '0';
-    }
-    n *= sgn;
-    return *this;
-  }
-
-  void close() {
-    fclose(fin);
-  }
-};
-
-InParser fin("diez.in");
+ifstream fin("diez.in");
 ofstream fout("diez.out");
 
 const int base = 53;
