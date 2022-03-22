@@ -1,11 +1,11 @@
 const int kN = 5e5;
 const int kLog = 18;
-int timer, tin[kN], tout[kN], depth[kN], lg2[kN], anc[kN][1 + kLog];
-vector<pair<int, int>> g[kN];
-int64_t dp[kN];
+int timer, tin[1 + kN], tout[1 + kN], depth[1 + kN], lg2[1 + kN], anc[kN][1 + kLog];
+vector<pair<int, int>> g[1 + kN];
+int64_t dp[1 + kN];
 
 void precalc() {
-  for (int i = 2; i < kN; ++i) {
+  for (int i = 2; i <= kN; ++i) {
     lg2[i] = lg2[i / 2] + 1;
   }
 }
