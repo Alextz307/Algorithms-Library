@@ -4,7 +4,7 @@ int timer, tin[1 + kN], tout[1 + kN], depth[1 + kN], lg2[1 + kN], anc[kN][1 + kL
 vector<pair<int, int>> g[1 + kN];
 int64_t dp[1 + kN];
 
-void precalc() {
+void precalc() { /// !!!
   for (int i = 2; i <= kN; ++i) {
     lg2[i] = lg2[i / 2] + 1;
   }
