@@ -41,7 +41,7 @@ int getLca(int u, int v) {
   int l = lg2[diff];
   int sol = rmq[l][x];
   int shift = diff - (1 << l);
-  if (depth[sol] > depth[rmq[l][x + shift]]) {
+  if (depth[rmq[l][x + shift]] < depth[sol]) {
     sol = rmq[l][x + shift];
   }
   return tour[sol];
