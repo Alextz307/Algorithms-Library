@@ -22,7 +22,7 @@ void compute_rmq() {
     rmq[0][i] = i;
   }
   for (int i = 1; (1 << i) < m; ++i) {
-    for (int j = 1; j <= m - (1 << i); ++j) {
+    for (int j = 1; j <= m - (1 << i) + 1; ++j) {
       int l = 1 << (i - 1);
       rmq[i][j] = rmq[i - 1][j];
       if (depth[rmq[i - 1][j + l]] < depth[rmq[i][j]]) {
@@ -32,7 +32,7 @@ void compute_rmq() {
   }
 }
 
-int find_lca(int u, int v) {
+int getLca(int u, int v) {
   int x = first[u], y = first[v];
   if (y < x) {
     swap(x, y);
