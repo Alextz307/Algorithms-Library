@@ -89,23 +89,23 @@ struct MCMF {
     if (dp[t] == INF) {
       return false;
     }
-    int minFlow = INF;
+    int flow = INF;
     for (int v = t; v != s; v = par[v]) {
-      minSelf(minFlow, C[par[v]][v]);
-      if (minFlow == 0) {
+      minSelf(flow, C[par[v]][v]);
+      if (flow == 0) {
         return false;
       }
     }
-    maxFlow += minFlow;
-    minCost += (int64_t)minFlow * (dp[t] - d[s] + d[t]);
+    maxFlow += flow;
+    minCost += (int64_t)flow * (dp[t] - d[s] + d[t]);
     for (int v = t; v != s; v = par[v]) {
-      C[par[v]][v] -= minFlow;
-      C[v][par[v]] += minFlow;
+      C[par[v]][v] -= flow;
+      C[v][par[v]] += flow;
     }
     return true;
   }
 
-  pair<int, int> solve() {
+  pair<int, int64_t> solve() {
     BellmanFord();
     while (Dijkstra());
     return {maxFlow, minCost};
