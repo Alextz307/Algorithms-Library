@@ -2,17 +2,13 @@
 
 using namespace std;
 
-const int MAXN = 3e5 + 1;
-int cnt[MAXN];
-
 struct qry {
   int l, r, u, v;
 };
 
 struct DSU {
   int n, cnt;
-  vector<int> p, sz;
-  stack<int> st;
+  vector<int> p, sz, stk;
 
   void init(int _n) {
     n = _n;
@@ -34,96 +30,97 @@ struct DSU {
     if (x == y) {
       return;
     }
-    if (sz[x] > sz[y]) {
+    if (sz[y] < sz[x]) {
       swap(x, y);
     }
     p[x] = y;
     sz[y] += sz[x];
-    st.emplace(x);
-    --cnt;
+    stk.emplace_back(x);
+    cnt -= 1;
   }
 
   void rollback(int checkpoint) {
-    while ((int)st.size() > checkpoint) {
-      int x = st.top();
-      st.pop();
+    while ((int)stk.size() > checkpoint) {
+      int x = stk.back();
+      stk.pop_back();
       sz[p[x]] -= sz[x];
       p[x] = x;
-      ++cnt;
+      cnt += 1;
     }
   }
-} tree;
+} dsu;
 
-bool seg_intersect(int l1, int r1, int l2, int r2) {
-  return l1 <= r2 && l2 <= r1;
+int n, m, q;
+
+bool segIntersect(int l1, int r1, int l2, int r2) {
+  return max(l1, l2) <= min(r1, r2);
 }
 
 void solve(int l, int r, const vector <qry> &queries) {
   if (l > r) {
     return;
   }
-  if (cnt[l - 1] == cnt[r]) {
-    return;
-  }
-  int checkpoint = tree.st.size();
-  vector<qry> new_queries;
+  int checkpoint = dsu.stk.size();
+  vector<qry> left, right;
+  int mid = (l + r) / 2;
   for (const auto &it : queries) {
     if (it.l <= l && r <= it.r) {
-      tree.unite(it.u, it.v);
+      dsu.unite(it.u, it.v);
     } else {
-      if (seg_intersect(l, r, it.l, it.r)) {
-        new_queries.emplace_back(it);
+      if (segIntersect(l, mid, it.l, it.r)) {
+        left.emplace_back(it);
+      }
+      if (segIntersect(mid + 1, r, it.l, it.r)) {
+        right.emplace_back(it);
       }
     }
   }
   if (l == r) {
-    if (cnt[l] - cnt[l - 1]) {
-      cout << tree.cnt << '\n';
+    if (m <= l) {
+      cout << dsu.cnt << ' ';
     }
-    tree.rollback(checkpoint);
+    dsu.rollback(checkpoint);
     return;
   }
-  int mid = (l + r) >> 1;
-  solve(l, mid, new_queries);
-  solve(mid + 1, r, new_queries);
-  tree.rollback(checkpoint);
+  solve(l, mid, left);
+  solve(mid + 1, r, right);
+  dsu.rollback(checkpoint);
 }
 
-void test_case() {
-  int n, m;
-  cin >> n >> m;
+void testCase() {
+  cin >> n >> m >> q;
   map<pair<int, int>, int> index;
   vector<qry> queries;
-  for (int t = 1; t <= m; ++t) {
+  for (int t = 1; t <= m + q; ++t) {
     char op;
-    cin >> op;
-    cnt[t] = cnt[t - 1];
-    if (op == '?') {
-      ++cnt[t];
-      continue;
+    if (t <= m) {
+      op = '1';
+    } else {
+      cin >> op;
     }
     int u, v;
     cin >> u >> v;
     if (u > v) {
       swap(u, v);
     }
-    if (op == '+') {
+    if (op == '1') {
       index[make_pair(u, v)] = queries.size();
-      queries.push_back({t, m, u, v});
+      queries.push_back({t, m + q, u, v});
     } else {
       queries[index[make_pair(u, v)]].r = t - 1;
     }
   }
-  tree.init(n);
-  solve(1, m, queries);
+  dsu.init(n);
+  solve(1, m + q, queries);
+  cout << '\n';
 }
 
 int main() {
   ios_base::sync_with_stdio(false);
-  cin.tie(NULL);
-  int T = 1;
-  for (int tc = 1; tc <= T; ++tc) {
-    test_case();
+  cin.tie(nullptr);
+  int tests = 1;
+  for (int tc = 0; tc < tests; ++tc) {
+    testCase();
   }
   return 0;
 }
