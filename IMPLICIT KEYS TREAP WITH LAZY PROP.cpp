@@ -2,61 +2,38 @@
 
 using namespace std;
 
-ifstream fin("diez.in");
-ofstream fout("diez.out");
-
-const int base = 53;
-const int mod = 805306457;
-const int kLen = 5e5;
-const int kN = 2e5 + 5e4;
-int n, m, p[1 + kLen], invp[1 + kLen];
-char s[1 + kLen];
-
-void multSelf(int &x, const int &y) {
-  x = (int64_t)x * y % mod;
-}
-
-int mult(int x, const int &y) {
-  multSelf(x, y);
-  return x;
-}
-
-
-void addSelf(int &x, const int &y) {
-  x += y;
-  if (x >= mod) {
-    x -= mod;
-  }
-}
-
-int add(int x, const int &y, const int &z) {
-  addSelf(x, y);
-  addSelf(x, z);
-  return x;
-}
-
-int Pow(int x, int n) {
-  int ans = 1;
-  while (n) {
-    if (n & 1) {
-      multSelf(ans, x);
-    }
-    multSelf(x, x);
-    n >>= 1;
-  }
-  return ans;
-}
-
-mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-
 struct treapNode {
   treapNode* l;
   treapNode* r;
-  int key, prior, sz, sum, lazy;
+  int key, prior, sz;
+  int64_t sum;
+  bool rev;
 };
 
-treapNode* emptyNode = new treapNode{nullptr, nullptr, 0, -1, 0, 0, 1};
-using pt = pair<treapNode*, treapNode*>;
+using ptr = treapNode*;
+using pt = pair<ptr, ptr>;
+const int kN = 2e5;
+const int mod = 1610612741;
+ptr emptyNode = new treapNode{nullptr, nullptr, 0, -1, 0, 0, 0};
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+int a[1 + kN];
+ptr root;
+
+void updateNode(ptr node) {
+  if (node != emptyNode) {
+    node->sz = node->l->sz + 1 + node->r->sz;
+    node->sum = node->l->sum + node->key + node->r->sum;
+  }
+}
+
+void push(ptr node) {
+  if (node != emptyNode && node->rev) {
+    swap(node->l, node->r);
+    node->l->rev ^= 1;
+    node->r->rev ^= 1;
+    node->rev = false;
+  }
+}
 
 void heapify(treapNode* node) {
   if (node == emptyNode) {
@@ -70,22 +47,14 @@ void heapify(treapNode* node) {
     best = node->r;
   }
   if (best != node) {
-    swap(best->prior, node->prior);
+    swap(node->prior, best->prior);
     heapify(best);
   }
 }
 
-void update(treapNode* node) {
-  if (node != emptyNode) {
-    node->sz = 1 + node->l->sz + node->r->sz;
-    node->sum = add(node->key, node->l->sum, node->r->sum);
-  }
-}
-
-treapNode* build(int st, int dr) {
-  int mid = (st + dr) >> 1;
-  int val = s[mid] - 'a' + 1;
-  treapNode* node = new treapNode{emptyNode, emptyNode, mult(p[n - mid], val), rng() % mod, 1, mult(p[n - mid], val), 1};
+ptr build(int st, int dr) {
+  int mid = (st + dr) / 2;
+  ptr node = new treapNode{emptyNode, emptyNode, a[mid], rng() % mod, 1, a[mid], 0};
   if (st < mid) {
     node->l = build(st, mid - 1);
   }
@@ -93,25 +62,11 @@ treapNode* build(int st, int dr) {
     node->r = build(mid + 1, dr);
   }
   heapify(node);
-  update(node);
+  updateNode(node);
   return node;
 }
 
-void updateNode(treapNode* node, int val) {
-  multSelf(node->key, val);
-  multSelf(node->sum, val);
-  multSelf(node->lazy, val);
-}
-
-void push(treapNode* node) {
-  if (node != emptyNode && node->lazy != 1) {
-    updateNode(node->l, node->lazy);
-    updateNode(node->r, node->lazy);
-    node->lazy = 1;
-  }
-}
-
-pt split(treapNode* node, int k) {
+pt split(ptr node, int k) {
   if (node == emptyNode) {
     return {emptyNode, emptyNode};
   }
@@ -119,16 +74,16 @@ pt split(treapNode* node, int k) {
   if (node->l->sz < k) {
     pt p = split(node->r, k - node->l->sz - 1);
     node->r = p.first;
-    update(node);
+    updateNode(node);
     return {node, p.second};
   }
   pt p = split(node->l, k);
   node->l = p.second;
-  update(node);
+  updateNode(node);
   return {p.first, node};
 }
 
-treapNode* join(treapNode* A, treapNode* B) {
+ptr join(ptr A, ptr B) {
   if (A == emptyNode) {
     return B;
   }
@@ -139,71 +94,56 @@ treapNode* join(treapNode* A, treapNode* B) {
   push(B);
   if (B->prior < A->prior) {
     A->r = join(A->r, B);
-    update(A);
+    updateNode(A);
     return A;
   }
   B->l = join(A, B->l);
-  update(B);
+  updateNode(B);
   return B;
 }
 
-treapNode* ins(treapNode* node, int k, treapNode* newNode) {
-  pt p = split(node, k - 1);
-  updateNode(p.first, base);
-  return join(join(p.first, newNode), p.second);
-}
-
-int query(treapNode* node, int st, int dr) {
-  pt p1 = split(node, st - 1);
-  pt p2 = split(p1.second, dr - st + 1);
-  int ans = p2.first->sum, expo = n - dr;
-  multSelf(ans, invp[expo]);
+ptr update(ptr node, int l, int r) {
+  pt p1 = split(node, l - 1);
+  pt p2 = split(p1.second, r - l + 1);
+  p2.first->rev ^= 1;
   p1.second = join(p2.first, p2.second);
   node = join(p1.first, p1.second);
-  return ans;
 }
 
-void TestCase() {
-  fin >> n >> m;
+int64_t query(ptr node, int l, int r) {
+  pt p1 = split(node, l - 1);
+  pt p2 = split(p1.second, r - l + 1);
+  int64_t ret = p2.first->sum;
+  p1.second = join(p2.first, p2.second);
+  node = join(p1.first, p1.second);
+  return ret;
+}
+
+void testCase() {
+  int n, q;
+  cin >> n >> q;
   for (int i = 1; i <= n; ++i) {
-    fin >> s[i];
+    cin >> a[i];
   }
-  p[0] = invp[0] = 1;
-  for (int i = 1; i <= n + m; ++i) {
-    p[i] = mult(p[i - 1], base);
-    invp[i] = Pow(p[i], mod - 2);
-  }
-  treapNode* root = build(1, n);
-  for (int i = 1; i <= m; ++i) {
-    int op;
-    fin >> op;
-    if (op == 1) {
-      int pos;
-      char c;
-      fin >> pos >> c;
-      ++pos;
-      ++n;
-      int val = c - 'a' + 1;
-      treapNode* newNode = new treapNode{emptyNode, emptyNode, mult(p[n - pos], val), rng() % mod, 1, mult(p[n - pos], val), 1};
-      root = ins(root, pos, newNode);
+  root = build(1, n);
+  for (int i = 0; i < q; ++i) {
+    char op;
+    int l, r;
+    cin >> op >> l >> r;
+    if (op == '1') {
+      root = update(root, l, r);
     } else {
-      int q1, q2, len;
-      fin >> q1 >> q2 >> len;
-      if (query(root, q1 + 1, q1 + len) == query(root, q2 + 1, q2 + len)) {
-        fout << "1\n";
-      } else {
-        fout << "0\n";
-      }
+      cout << query(root, l, r) << '\n';
     }
   }
 }
 
 int main() {
+  ios_base::sync_with_stdio(false);
+  cin.tie(nullptr);
   int tests = 1;
-  for (int tc = 1; tc <= tests; ++tc) {
-    TestCase();
+  for (int tc = 0; tc < tests; ++tc) {
+    testCase();
   }
-  fin.close();
-  fout.close();
   return 0;
 }
