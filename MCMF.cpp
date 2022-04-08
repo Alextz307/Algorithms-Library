@@ -16,9 +16,9 @@ struct MCMF {
   int n, s, t, maxFlow = 0;
   int64_t minCost = 0;
   vector<vector<int>> g, C, W;
-  vector<int> d, dp, par;
+  vector<int> d, dp, par, D;
   vector<bool> inQ;
-
+ 
   MCMF(int _n, int _s, int _t) : n(_n), s(_s), t(_t) {
     g.resize(n + 1);
     C.resize(n + 1, vector<int>(n + 1));
@@ -26,9 +26,10 @@ struct MCMF {
     d.resize(n + 1, INF);
     dp.resize(n + 1);
     par.resize(n + 1);
+    D.resize(n + 1);
     inQ.resize(n + 1);
   }
-
+ 
   void addEdge(int u, int v, int c, int w) {
     g[u].emplace_back(v);
     g[v].emplace_back(u);
@@ -36,7 +37,7 @@ struct MCMF {
     W[u][v] = w;
     W[v][u] = -w;
   }
-
+ 
   void BellmanFord() {
     d[s] = 0;
     queue<int> q;
@@ -57,12 +58,13 @@ struct MCMF {
       }
     }
   }
-
+ 
   bool Dijkstra() {
     for (int i = 1; i <= n; ++i) {
       dp[i] = INF;
     }
     dp[s] = 0;
+    D[s] = 0;
     priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
     pq.emplace(0, s);
     while (!pq.empty()) {
@@ -79,6 +81,7 @@ struct MCMF {
         int newCost = cost + W[u][v] + d[u] - d[v];
         if (newCost < dp[v]) {
           dp[v] = newCost;
+          D[v] = D[u] + W[u][v];
           par[v] = u;
           if (v != t) {
             pq.emplace(newCost, v);
@@ -89,22 +92,23 @@ struct MCMF {
     if (dp[t] == INF) {
       return false;
     }
-    int flow = INF;
+    d = D;
+    int minFlow = INF;
     for (int v = t; v != s; v = par[v]) {
-      minSelf(flow, C[par[v]][v]);
-      if (flow == 0) {
+      minSelf(minFlow, C[par[v]][v]);
+      if (minFlow == 0) {
         return false;
       }
     }
-    maxFlow += flow;
-    minCost += (int64_t)flow * (dp[t] - d[s] + d[t]);
+    maxFlow += minFlow;
+    minCost += (int64_t)minFlow * D[t];
     for (int v = t; v != s; v = par[v]) {
-      C[par[v]][v] -= flow;
-      C[v][par[v]] += flow;
+      C[par[v]][v] -= minFlow;
+      C[v][par[v]] += minFlow;
     }
     return true;
   }
-
+ 
   pair<int, int64_t> solve() {
     BellmanFord();
     while (Dijkstra());
