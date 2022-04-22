@@ -21,7 +21,7 @@ void compute_rmq() {
   for (int i = 1; i <= m; ++i) {
     rmq[0][i] = i;
   }
-  for (int i = 1; (1 << i) < m; ++i) {
+  for (int i = 1; (1 << i) <= m; ++i) {
     for (int j = 1; j <= m - (1 << i) + 1; ++j) {
       int l = 1 << (i - 1);
       rmq[i][j] = rmq[i - 1][j];
