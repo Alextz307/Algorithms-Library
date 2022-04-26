@@ -1,31 +1,31 @@
 #include <bits/stdc++.h>
- 
+
 using namespace std;
- 
+
 ifstream fin("euclid.in");
 ofstream fout("euclid.out");
- 
+
 const int kN = 400;
 const int kLog = 8;
 int lg2[1 + kN], rmq[1 + kLog][1 + kLog][1 + kN][1 + kN];
- 
+
 void maxSelf(int &x, int y) {
   if (x < y) {
     x = y;
   }
 }
- 
+
 void precalc() {
   for (int i = 2; i <= kN; ++i) {
     lg2[i] = lg2[i / 2] + 1;
   }
 }
- 
+
 int query(int x1, int y1, int x2, int y2) {
   int h1 = lg2[x2 - x1], h2 = lg2[y2 - y1];
-  return __gcd(rmq[h1][h2][x1][y1], __gcd(rmq[h1][h2][x2 - (1 << h1) + 1][y1], __gcd(rmq[h1][h2][x1][y2 - (1 << h2) + 1], rmq[h1][h2][x2 - (1 << h1) + 1][y2 - (1 << h2) + 1])));
+  return __gcd(__gcd(rmq[h1][h2][x1][y1], rmq[h1][h2][x2 - (1 << h1) + 1][y1]), __gcd(rmq[h1][h2][x1][y2 - (1 << h2) + 1], rmq[h1][h2][x2 - (1 << h1) + 1][y2 - (1 << h2) + 1]));
 }
- 
+
 void testCase(int tc) {
   int n, m, h, w;
   fin >> n >> m >> h >> w;
@@ -53,7 +53,7 @@ void testCase(int tc) {
   }
   fout << "Case #" << tc << ": " << ans << '\n';
 }
- 
+
 int main() {
   precalc();
   int tests;
