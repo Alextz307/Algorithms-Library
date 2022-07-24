@@ -1,38 +1,27 @@
-#include <bits/stdc++.h>
-
-using namespace std;
-
-const int MAXN = 1e5 + 1;
-int pw2[18], lg2[MAXN], rmq[MAXN][17];
-
-void compute_rmq(int n) {
-  pw2[0] = 1;
-  for (int i = 1; i <= n; ++i) {
-    if (i < 18)
-      pw2[i] = pw2[i - 1] << 1;
-    if (i > 1)
-      lg2[i] = lg2[i >> 1] + 1;
-  }
-  for (int j = 1; pw2[j] <= n; ++j)
-    for (int i = 1; i + pw2[j] - 1 <= n; ++i)
-      rmq[i][j] = min(rmq[i][j - 1], rmq[i + pw2[j - 1]][j - 1]);
-}
-
-int query(int st, int dr) {
-  int diff = dr - st + 1;
-  int k = lg2[diff];
-  int shift = diff - pw2[k];
-  return min(rmq[st][k], rmq[st + shift][k]);
-}
-
-int main() {
-  ios_base::sync_with_stdio(false);
-  cin.tie(nullptr);
-  cout.tie(nullptr);
+struct RMQ {
   int n;
-  cin >> n;
-  for (int i = 1; i <= n; ++i)
-    cin >> rmq[i][0];
-  compute_rmq(n);
-  return 0;
-}
+  vector<int> lg2;
+  vector<vector<int>> rmq;
+
+  RMQ(const vector<int> &a) {
+    n = a.size() - 1;
+    lg2.resize(n + 1);
+    for (int i = 2; i <= n; ++i) {
+      lg2[i] = lg2[i / 2] + 1;
+    }
+    rmq.resize(n + 1, vector<int>(lg2[n] + 1));
+    for (int i = 1; i <= n; ++i) {
+      rmq[i][0] = a[i];
+    }
+    for (int l = 1; l <= lg2[n]; ++l) {
+      for (int i = 1; i <= n - (1 << l) + 1; ++i) {
+        rmq[i][l] = min(rmq[i][l - 1], rmq[i + (1 << (l - 1))][l - 1]);
+      }
+    }
+  }
+
+  int query(int l, int r) {
+    int k = lg2[r - l + 1];
+    return min(rmq[l][k], rmq[r - (1 << k) + 1][k]);
+  }
+};
