@@ -1,3 +1,5 @@
+const int INF = 1e9;
+
 struct edge {
   int v, c, w;
 };
