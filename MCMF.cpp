@@ -33,9 +33,9 @@ struct MCMF {
   void addEdge(int u, int v, int c, int w) {
     g[u].emplace_back(v);
     g[v].emplace_back(u);
-    C[u][v] += c;
-    W[u][v] += w;
-    W[v][u] -= w;
+    C[u][v] = c;
+    W[u][v] = w;
+    W[v][u] = -w;
   }
  
   void BellmanFord() {
