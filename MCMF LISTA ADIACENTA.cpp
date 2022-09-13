@@ -91,6 +91,9 @@ struct MCMF {
     int minFlow = INF;
     for (int i = t; i != s; i = par[i]) {
       minSelf(minFlow, edges[lastId[i]].c);
+      if (minFlow == 0) {
+        return false;
+      }
     }
     maxFlow += minFlow;
     minCost += minFlow * D[t];
