@@ -24,7 +24,7 @@ void updateNode(ptr node) {
   }
 }
 
-void heapify(treapNode* node) {
+void heapify(ptr node) {
   if (node == emptyNode) {
     return;
   }
@@ -42,7 +42,7 @@ void heapify(treapNode* node) {
 }
 
 treapNode* build(int st, int dr, int lin) {
-  int mid = (st + dr) >> 1;
+  int mid = (st + dr) / 2;
   treapNode* node = new treapNode{emptyNode, emptyNode, mid + lin * n, rng() % mod, 1};
   if (st < mid) {
     node->l = build(st, mid - 1, lin);
