@@ -28,7 +28,7 @@ void heapify(ptr node) {
   if (node == emptyNode) {
     return;
   }
-  treapNode* best = node;
+  ptr best = node;
   if (best->prior < node->l->prior) {
     best = node->l;
   }
