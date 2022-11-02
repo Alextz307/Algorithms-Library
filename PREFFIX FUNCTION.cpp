@@ -1,4 +1,4 @@
-vector<int> preffix_function(string s) { /// cel mai lung prefix care este si sufix(sirul complet este exclus)
+vector<int> preffixFunction(string s) { /// cel mai lung prefix care este si sufix(sirul complet este exclus)
   int n = s.length();
   vector<int> pi(n + 1);
   s = '#' + s;
