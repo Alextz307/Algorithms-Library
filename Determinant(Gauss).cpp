@@ -46,13 +46,11 @@ int main() {
 
     det *= a[p][p];
 
-    for (int i = 1; i <= n; ++i) {
-      if (i != p) {
-        ld f = a[i][p] / a[p][p];
+    for (int i = p + 1; i <= n; ++i) {
+      ld f = a[i][p] / a[p][p];
 
-        for (int j = p; j <= n; ++j) {
-          a[i][j] -= f * a[p][j];
-        }
+      for (int j = p; j <= n; ++j) {
+        a[i][j] -= f * a[p][j];
       }
     }
   }
