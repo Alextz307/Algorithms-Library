@@ -1,11 +1,65 @@
-int det(int xA, int yA, int xB, int yB, int xC, int yC) {
-    return xA * yB + xB * yC + yA * xC - yB * xC - yA * xB - xA * yC;
-}
+#include <bits/stdc++.h>
+#pragma GCC optimize("unroll-loops")
 
-int det(int X1, int Y1, int X2, int Y2, int X3, int Y3) {
-    return (X2 - X1) * (Y3 - Y1) - (X3 - X1) * (Y2 - Y1);
-}
- 
-int det(pi A, pi B, pi C) {
-    return (B.x - A.x) * (C.y - A.y) - (C.x - A.x) * (B.y - A.y);
+using namespace std;
+using ld = long double;
+
+ifstream fin("determinant.in");
+ofstream fout("determinant.out");
+
+const int kN = 10;
+const ld EPS = 1e-10;
+ld a[1 + kN][1 + kN];
+
+int main() {
+  int n;
+  fin >> n;
+
+  for (int i = 1; i <= n; ++i) {
+    for (int j = 1; j <= n; ++j) {
+      fin >> a[i][j];
+    }
+  }
+
+  ld det = 1;
+  for (int p = 1; p <= n; ++p) {
+    int pivot = p;
+
+    for (int i = p; i <= n; ++i) {
+      if (abs(a[pivot][p]) < abs(a[i][p])) {
+        pivot = i;
+      }
+    }
+
+    if (abs(a[pivot][p]) < EPS) {
+      det = 0;
+      break;
+    }
+
+    if (p != pivot) {
+      det = -det;
+    }
+
+    for (int j = p; j <= n; ++j) {
+      swap(a[p][j], a[pivot][j]);
+    }
+
+    det *= a[p][p];
+
+    for (int i = 1; i <= n; ++i) {
+      if (i != p) {
+        ld f = a[i][p] / a[p][p];
+
+        for (int j = p; j <= n; ++j) {
+          a[i][j] -= f * a[p][j];
+        }
+      }
+    }
+  }
+
+  fout << fixed << setprecision(12) << det << '\n';
+
+  fin.close();
+  fout.close();
+  return 0;
 }
