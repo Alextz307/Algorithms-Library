@@ -23,8 +23,7 @@ int query(int version, int p) {
   int res = 0;
 
   for (int i = p; i > 0; i = i & (i - 1)) {
-    auto it = upper_bound(aib[i].begin(), aib[i].end(), make_pair(version, INF)) - 1;
-    res += it->second;
+    res += prev(upper_bound(aib[i].begin(), aib[i].end(), make_pair(version, INF)))->second;
   }
 
   return res;
