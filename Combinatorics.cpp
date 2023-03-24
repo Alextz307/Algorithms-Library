@@ -3,15 +3,20 @@ const int kN = 1e5;
 int f[1 + kN], invf[1 + kN];
  
 /* int64_t nck(int N, int K) { Combinari in O(N)
-  if (K < N - K)
+  if (K < N - K) {
     K = N - K;
+  }
+  
   int64_t ans = 1;
   int p = 2;
+  
   for (int i = K + 1; i <= N; ++i) {
     ans *= i;
-    while (p <= N - K && ans % p ==0)
+    while (p <= N - K && ans % p == 0) {
       ans /= p++;
+    }
   }
+  
   return ans;
 } */
  
@@ -38,13 +43,17 @@ int mult(int x, const int &y) {
  
 int Pow(int x, int n) {
   int ans = 1;
+ 
   while (n) {
     if (n & 1) {
       multSelf(ans, x);
     }
+   
     multSelf(x, x);
+   
     n >>= 1;
   }
+ 
   return ans;
 }
  
@@ -56,9 +65,11 @@ int nck(int n, int k) {
   if (n < k) {
     return 0;
   }
+ 
   if (n == k) {
     return 1;
   }
+ 
   return mult(f[n], mult(invf[k], invf[n - k]));
 }
  
@@ -67,6 +78,7 @@ void computeFactorials(int n) {
   for (int i = 2; i <= n; ++i) {
     f[i] = mult(f[i - 1], i);
   }
+ 
   invf[n] = invers(f[n]);
   for (int i = n - 1; i >= 0; --i) {
     invf[i] = mult(invf[i + 1], i + 1);
