@@ -74,8 +74,8 @@ int nck(int n, int k) {
 }
  
 void computeFactorials(int n) {
-  f[0] = f[1] = 1;
-  for (int i = 2; i <= n; ++i) {
+  f[0] = 1;
+  for (int i = 1; i <= n; ++i) {
     f[i] = mult(f[i - 1], i);
   }
  
