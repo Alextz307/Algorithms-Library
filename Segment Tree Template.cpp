@@ -19,10 +19,13 @@ struct SegTree {
 
   void init(int N) {
     n = N;
+    
     int Size = 1;
+    
     while (Size < n) {
       Size <<= 1;
     }
+    
     t.resize(Size << 1, empty_node);
   }
 
@@ -35,11 +38,14 @@ struct SegTree {
     if (t[x].lazy == NIL) {
       return;
     }
+    
     int mid = (lx + rx) >> 1;
     int len[] = {mid - lx + 1, rx - mid};
+    
     for (int i = 0; i <= 1; ++i) {
       update_node(x << 1 | i, len[i]);
     }
+    
     t[x].lazy = NIL;
   }
 
@@ -48,13 +54,17 @@ struct SegTree {
       update_node(x, rx - lx + 1);
       return;
     }
+    
     push(x, lx, rx);
+    
     int mid = (lx + rx) >> 1, lSon = x << 1, rSon = x << 1 | 1;
+    
     if (pos <= mid) {
       update_pos(lSon, lx, mid, pos);
     } else {
       update_pos(rSon, mid + 1, rx, pos);
     }
+    
     t[x] = t[lSon] + t[rSon];
   }
 
@@ -67,14 +77,19 @@ struct SegTree {
       update_node(x, rx - lx + 1);
       return;
     }
+    
     push(x, lx, rx);
+    
     int mid = (lx + rx) >> 1, lSon = x << 1, rSon = x << 1 | 1;
+    
     if (st <= mid) {
       update_interval(lSon, lx, mid, st, dr);
     }
+    
     if (mid + 1 <= dr) {
       update_interval(rSon, mid + 1, rx, st, dr);
     }
+    
     t[x] = t[lSon] + t[rSon];
   }
 
@@ -86,15 +101,20 @@ struct SegTree {
     if (st <= lx && rx <= dr) {
       return t[x];
     }
+    
     push(x, lx, rx);
+    
     int mid = (lx + rx) >> 1;
     node ans1 = empty_node, ans2 = empty_node;
+    
     if (st <= mid) {
       ans1 = query(x << 1, lx, mid, st, dr);
     }
+    
     if (mid + 1 <= dr) {
       ans2 = query(x << 1 | 1, mid + 1, rx, st, dr);
     }
+    
     return ans1 + ans2;
   }
 
