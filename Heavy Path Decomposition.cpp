@@ -169,7 +169,7 @@ void heavyUpdate(int u, int v, int x) {
       swap(l, r);
     }
 
-    st.update(l, r, x); /// Pentru muchii ---> st.update(l + 1, r, x)
+    st.update(l, r, x); /// For edges ---> st.update(l + 1, r, x)
   } else {
     if (dep[chainTop[u]] < dep[chainTop[v]]) {
       st.update(tin[chainTop[v]], tin[v], x);
@@ -189,7 +189,7 @@ node heavyQuery(int u, int v) {
       swap(l, r);
     }
 
-    return st.query(l, r); /// Pentru muchii ---> st.query(l + 1, r)
+    return st.query(l, r); /// For edges ---> st.query(l + 1, r)
   }
 
   if (dep[chainTop[u]] < dep[chainTop[v]]) {
