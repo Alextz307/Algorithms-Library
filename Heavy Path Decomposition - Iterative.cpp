@@ -176,7 +176,7 @@ void heavyUpdate(int u, int v, int x) {
     swap(l, r);
   }
 
-  st.update(l, r, x); /// Pentru muchii ---> st.update(l + 1, r, x)
+  st.update(l, r, x); /// For edges ---> st.update(l + 1, r, x)
 }
 
 node heavyQuery(int u, int v) {
@@ -196,7 +196,7 @@ node heavyQuery(int u, int v) {
     swap(l, r);
   }
 
-  res = res + st.query(l, r); /// Pentru muchii ---> st.query(l + 1, r)
+  res = res + st.query(l, r); /// For edges ---> st.query(l + 1, r)
 
   return res;
 }
