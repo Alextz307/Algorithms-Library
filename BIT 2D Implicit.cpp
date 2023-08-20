@@ -37,8 +37,8 @@ struct FenwickTree2D {
 
   void updateSubmatrix(int x1, int y1, int x2, int y2) {
     update(x1, y1, 1);
-    update(x2 + 1, y1, -1);
     update(x1, y2 + 1, -1);
+    update(x2 + 1, y1, -1);
     update(x2 + 1, y2 + 1, 1);
   }
 
