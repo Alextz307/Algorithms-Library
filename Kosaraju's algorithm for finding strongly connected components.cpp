@@ -1,13 +1,13 @@
 #include <bits/stdc++.h>
-#define nmax 100001
 
 using namespace std;
 
 ifstream f("ctc.in");
 ofstream g("ctc.out");
 
-int n, m, nr, viz[nmax];
-vector<int> G[nmax], GT[nmax], CTC[nmax];
+const int kN = 1e5;
+int n, m, nr, viz[1 + kN];
+vector<int> G[1 + kN], GT[1 + kN], CTC[1 + kN];
 stack<int> S;
 
 void read() {
