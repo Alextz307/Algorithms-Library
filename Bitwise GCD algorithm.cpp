@@ -1,16 +1,19 @@
-static inline int myGcd(int u, int v) {
-  int shift;
+int myGcd(int u, int v) {
   if (u == 0) {
     return v;
   }
+  
   if (v == 0) {
     return u;
   }
+  
   if (u == 1 || v == 1) {
     return 1;
   }
-  shift = __builtin_ctz(u | v);
+  
+  int shift = __builtin_ctz(u | v);
   u >>= __builtin_ctz(u);
+  
   do {
     unsigned m;
     v >>= __builtin_ctz(v);
@@ -19,5 +22,6 @@ static inline int myGcd(int u, int v) {
     u += v & m;
     v = (v + m) ^ m;
   } while (v != 0);
+  
   return u << shift;
 }
