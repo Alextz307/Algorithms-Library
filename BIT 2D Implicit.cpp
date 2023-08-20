@@ -35,6 +35,13 @@ struct FenwickTree2D {
     }
   }
 
+  void updateSubmatrix(int x1, int y1, int x2, int y2) {
+    update(x1, y1, 1);
+    update(x2 + 1, y1, -1);
+    update(x1, y2 + 1, -1);
+    update(x2 + 1, y2 + 1, 1);
+  }
+
   int queryAib(int x, int y) {
     int pos = upper_bound(vals[x].begin(), vals[x].end(), y) - vals[x].begin();
     int ans = 0;
@@ -64,5 +71,9 @@ struct FenwickTree2D {
       return 0;
     }
     return query(r, v) - query(l - 1, v);
+  }
+
+  int querySubmatrix(int x1, int y1, int x2, int y2) {
+    return query(x2, y2) - query(x2, y1 - 1) - query(x1 - 1, y2) + query(x1 - 1, y1 - 1);
   }
 };
