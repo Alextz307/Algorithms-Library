@@ -116,8 +116,11 @@ void solve(int l, int r, const vector <qry> &queries) {
   }
 
   solve(l, mid, left);
+  left.clear();
+  
   solve(mid + 1, r, right);
-
+  right.clear();
+  
   dsu.rollback(checkpoint);
 }
 
