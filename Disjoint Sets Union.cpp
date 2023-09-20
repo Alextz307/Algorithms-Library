@@ -11,19 +11,24 @@ struct DSU {
     if (x == p[x]) {
       return x;
     }
+    
     return p[x] = root(p[x]);
   }
 
   bool unite(int u, int v) {
     int x = root(u), y = root(v);
+    
     if (x == y) {
       return false;
     }
+    
     if (sz[y] < sz[x]) {
       swap(x, y);
     }
+    
     p[x] = y;
     sz[y] += sz[x];
+    
     return true;
   }
 };
