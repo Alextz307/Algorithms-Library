@@ -23,21 +23,26 @@ void dfs(int u, int par) {
   g[u].erase(find(g[u].begin(), g[u].end(), par));
   tin[u] = low[u] = ++timer;
   int children = 0;
+  
   for (int v : g[u]) {
     if (tin[v]) {
       minSelf(low[u], tin[v]);
     } else {
-      ++children;
+      children += 1;
       st.emplace(u, v);
+      
       dfs(v, u);
       minSelf(low[u], low[v]);
+      
       if (tin[u] <= low[v]) {
         if (tin[u] < low[v]) {
           bridges.emplace_back(u, v);
         }
+        
         if (par) {
           isAp[u] = true;
         }
+        
         bc.push_back({});
         int p, q;
         do {
@@ -49,6 +54,7 @@ void dfs(int u, int par) {
       }
     }
   }
+  
   if (!par && children > 1) {
     isAp[u] = true;
   }
@@ -57,23 +63,28 @@ void dfs(int u, int par) {
 void TestCase() {
   int task, n, m;
   fin >> task >> n >> m;
+  
   for (int i = 1; i <= m; ++i) {
     int u, v;
     fin >> u >> v;
     g[u].emplace_back(v);
     g[v].emplace_back(u);
   }
+  
   for (int v = 1; v <= n; ++v) {
     if (!tin[v]) {
       g[v].emplace_back(0);
       dfs(v, 0);
     }
   }
+  
   if (task == 1) {
     fout << bc.size() << '\n';
+    
     for (auto it : bc) {
       sort(it.begin(), it.end());
       it.erase(unique(it.begin(), it.end()), it.end());
+      
       fout << it.size() << ' ';
       for (int v : it) {
         fout << v << ' ';
@@ -98,10 +109,13 @@ void TestCase() {
 
 int main() {
   int tests = 1;
+  
   for (int tc = 1; tc <= tests; ++tc) {
     TestCase();
   }
+  
   fin.close();
   fout.close();
+  
   return 0;
 }
