@@ -2,7 +2,7 @@ const int mod = 1e9 + 7;
 const int kN = 1e5;
 int f[1 + kN], invf[1 + kN];
  
-/* int64_t nck(int N, int K) { Combinari in O(N)
+/* int64_t nck(int N, int K) { // N choose K in linear time
   if (K < N - K) {
     K = N - K;
   }
