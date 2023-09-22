@@ -1,2 +1,2 @@
 # Library
-C++ implementations for well-known competitive programming algorithms and data structures.
+C++ implementations for well-known algorithms and data structures.
