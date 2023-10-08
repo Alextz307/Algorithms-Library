@@ -1,6 +1,6 @@
 const int kN = 5e5;
 const int kLog = 18;
-int timer, tin[1 + kN], tout[1 + kN], depth[1 + kN], lg2[1 + kN], anc[kN][1 + kLog];
+int timer, tin[1 + kN], tout[1 + kN], depth[1 + kN], lg2[1 + kN], anc[1 + kN][1 + kLog];
 vector<pair<int, int>> g[1 + kN];
 int64_t dp[1 + kN];
 
